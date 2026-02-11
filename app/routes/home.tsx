@@ -1,6 +1,35 @@
 import type { Route } from "./+types/home";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
+
+// Custom hook for scroll animations
+function useScrollAnimation() {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => {
+      if (elementRef.current) {
+        observer.unobserve(elementRef.current);
+      }
+    };
+  }, []);
+
+  return { elementRef, isVisible };
+}
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -62,8 +91,14 @@ function ContactModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-8 relative">
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      style={{ animation: "fadeIn 0.3s ease-out" }}
+    >
+      <div 
+        className="bg-white rounded-3xl max-w-md w-full p-8 relative shadow-2xl"
+        style={{ animation: "scaleIn 0.4s ease-out" }}
+      >
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
@@ -166,25 +201,56 @@ function Header({
   onOpenContact: () => void;
   onGoToServices: () => void;
 }) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="w-full bg-[#1e3a5f] py-4 px-6">
+    <header
+      className={`w-full fixed top-0 left-0 right-0 z-50 py-4 px-6 transition-all duration-500 ${
+        scrolled
+          ? "bg-white/95 backdrop-blur-lg shadow-lg"
+          : "bg-[#1e3a5f]"
+      }`}
+      style={{ animation: "slideDown 0.8s ease-out" }}
+    >
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <span className="text-white font-semibold text-xl tracking-tight">
-          CustomSites
+        <span 
+          className={`font-bold text-xl tracking-tight transition-all duration-300 ${
+            scrolled ? "text-[#1e3a5f]" : "text-white"
+          }`}
+          style={{ animation: "fadeIn 1s ease-out" }}
+        >
+          ✨ CustomSites
         </span>
-        <nav className="hidden md:flex gap-6 text-sm text-white/90">
+        <nav className="hidden md:flex gap-6 text-sm font-medium">
           <button
             onClick={onGoToServices}
-            className="hover:text-white transition-colors"
+            className={`transition-all duration-300 hover:scale-110 ${
+              scrolled ? "text-gray-600 hover:text-[#1e3a5f]" : "text-white/90 hover:text-white"
+            }`}
           >
             Services
           </button>
-          <a href="/portfolio" className="hover:text-white transition-colors">
+          <a 
+            href="/portfolio" 
+            className={`transition-all duration-300 hover:scale-110 ${
+              scrolled ? "text-gray-600 hover:text-[#1e3a5f]" : "text-white/90 hover:text-white"
+            }`}
+          >
             Portfolio
           </a>
           <button
             onClick={onOpenContact}
-            className="hover:text-white transition-colors"
+            className={`transition-all duration-300 hover:scale-110 ${
+              scrolled ? "text-gray-600 hover:text-[#1e3a5f]" : "text-white/90 hover:text-white"
+            }`}
           >
             Contact
           </button>
@@ -195,36 +261,104 @@ function Header({
 }
 
 function Hero({ onOpenContact }: { onOpenContact: () => void }) {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
-    <section className="relative w-full min-h-[480px] bg-gradient-to-br from-[#1e3a5f] to-[#2d5a87] overflow-hidden">
+    <section className="relative w-full min-h-[100vh] overflow-hidden">
+      {/* Animated Background Image with Parallax */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-20"
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-out"
         style={{
           backgroundImage:
             "url(https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&q=80)",
+          transform: `translate(${mousePosition.x * 0.01}px, ${mousePosition.y * 0.01}px) scale(1.1)`,
         }}
       />
-      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-20">
-        <h1 className="text-white text-5xl md:text-6xl font-bold max-w-2xl leading-tight">
-          Your Vision, Our Craft
+      
+      {/* Animated Gradient Overlay */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-[#1e3a5f]/95 via-[#2d5a87]/90 to-[#1e3a5f]/95"
+        style={{ animation: "pulse 4s ease-in-out infinite" }}
+      />
+      
+      {/* Floating Particles */}
+      <div className="absolute top-10 left-10 w-2 h-2 bg-white/40 rounded-full" style={{ animation: "float 6s ease-in-out infinite" }} />
+      <div className="absolute top-40 right-20 w-3 h-3 bg-white/30 rounded-full" style={{ animation: "float 8s ease-in-out infinite 1s" }} />
+      <div className="absolute bottom-60 left-1/4 w-2 h-2 bg-white/40 rounded-full" style={{ animation: "float 7s ease-in-out infinite 2s" }} />
+      <div className="absolute top-1/3 right-1/3 w-4 h-4 bg-white/20 rounded-full" style={{ animation: "float 9s ease-in-out infinite 1.5s" }} />
+      
+      {/* Decorative animated circles */}
+      <div 
+        className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
+        style={{ animation: "float 10s ease-in-out infinite, pulse 3s ease-in-out infinite" }}
+      />
+      <div 
+        className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-full blur-3xl"
+        style={{ animation: "float 12s ease-in-out infinite 2s, pulse 4s ease-in-out infinite 1s" }}
+      />
+      
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-40 pb-32">
+        <div 
+          className="inline-block mb-6 px-6 py-3 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-medium border border-white/30 shadow-xl"
+          style={{ animation: "fadeInUp 1s ease-out, float 3s ease-in-out infinite 0.5s" }}
+        >
+          ✨ Premium Custom Websites
+        </div>
+        
+        <h1 
+          className="text-white text-6xl md:text-7xl font-bold max-w-3xl leading-tight mb-8"
+          style={{ animation: "fadeInUp 1s ease-out 0.2s backwards" }}
+        >
+          Your Vision,
+          <br />
+          <span className="bg-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 bg-clip-text text-transparent" style={{ animation: "shimmer 3s ease-in-out infinite" }}>
+            Our Craft
+          </span>
         </h1>
-        <p className="text-white/95 text-xl md:text-2xl max-w-2xl mt-6 leading-relaxed">
+        
+        <p 
+          className="text-white/95 text-xl md:text-2xl max-w-2xl leading-relaxed mb-10"
+          style={{ animation: "fadeInUp 1s ease-out 0.4s backwards" }}
+        >
           Custom websites designed to captivate your audience and grow your business.
         </p>
-        <div className="flex gap-4 mt-8">
+        
+        <div 
+          className="flex flex-col sm:flex-row gap-5"
+          style={{ animation: "fadeInUp 1s ease-out 0.6s backwards" }}
+        >
           <button
             type="button"
             onClick={onOpenContact}
-            className="bg-white text-[#1e3a5f] px-8 py-3 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+            className="group relative bg-white text-[#1e3a5f] px-10 py-5 rounded-full font-bold text-lg hover:bg-gray-50 transition-all hover:scale-110 shadow-2xl overflow-hidden"
           >
-            Start Your Project
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <span className="relative z-10 group-hover:text-white transition-colors duration-500">Start Your Project ✨</span>
           </button>
           <a
             href="/portfolio"
-            className="border-2 border-white text-white px-8 py-3 font-semibold rounded-lg hover:bg-white/10 transition-colors inline-block text-center"
+            className="group border-3 border-white text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white hover:text-[#1e3a5f] transition-all hover:scale-110 shadow-2xl inline-block text-center"
           >
-            View Portfolio
+            View Portfolio 🚀
           </a>
+        </div>
+        
+        {/* Scroll Indicator */}
+        <div 
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+          style={{ animation: "bounce 2s ease-in-out infinite" }}
+        >
+          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2">
+            <div className="w-1 h-2 bg-white/70 rounded-full" style={{ animation: "scrollDown 2s ease-in-out infinite" }} />
+          </div>
         </div>
       </div>
     </section>
@@ -238,21 +372,34 @@ function TabNav({
   activeTab: TabId;
   onTabChange: (id: TabId) => void;
 }) {
+  const { elementRef, isVisible } = useScrollAnimation();
+
   return (
-    <nav className="max-w-6xl mx-auto px-6 -mt-1">
-      <div className="flex gap-0">
-        {TABS.map((tab) => (
+    <nav 
+      ref={elementRef}
+      className={`relative z-20 max-w-5xl mx-auto px-6 -mt-16 transition-all duration-1000 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+      }`}
+    >
+      <div className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl p-3 flex gap-3 border border-gray-100">
+        {TABS.map((tab, index) => (
           <button
             key={tab.id}
             type="button"
             onClick={() => onTabChange(tab.id)}
-            className={
+            className={`flex-1 px-8 py-5 text-sm font-bold transition-all duration-500 rounded-2xl relative overflow-hidden group ${
               activeTab === tab.id
-                ? "px-8 py-4 text-sm font-medium transition-colors bg-[#1e3a5f] text-white"
-                : "px-8 py-4 text-sm font-medium transition-colors bg-[#e8eef4] text-[#1e3a5f] hover:bg-[#dce4ec]"
-            }
+                ? "bg-gradient-to-r from-[#1e3a5f] via-[#2d5a87] to-[#1e3a5f] text-white shadow-lg scale-105"
+                : "text-gray-600 hover:text-[#1e3a5f] hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 hover:scale-105"
+            }`}
+            style={{
+              animation: `fadeInUp 0.6s ease-out ${index * 0.1}s backwards`,
+            }}
           >
-            {tab.label}
+            {activeTab === tab.id && (
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent" style={{ animation: "shimmer 2s ease-in-out infinite" }} />
+            )}
+            <span className="relative z-10">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -297,18 +444,42 @@ function ServiceCard({
   icon,
   value,
   label,
+  index,
 }: {
   icon: string;
   value: string;
   label: string;
+  index: number;
 }) {
+  const { elementRef, isVisible } = useScrollAnimation();
+
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
-      <span className="text-3xl" aria-hidden>
-        {icon}
-      </span>
-      <p className="text-[#1e3a5f] font-bold text-xl mt-3">{value}</p>
-      <p className="text-gray-600 text-sm mt-1">{label}</p>
+    <div 
+      ref={elementRef}
+      className={`group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-gray-100 relative overflow-hidden ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+      }`}
+      style={{
+        transitionDelay: `${index * 100}ms`,
+      }}
+    >
+      {/* Animated background gradient on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a5f]/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      
+      {/* Shine effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+      </div>
+      
+      <div className="relative z-10">
+        <div className="w-20 h-20 bg-gradient-to-br from-[#1e3a5f] via-[#2d5a87] to-[#1e3a5f] rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+          <span className="text-4xl group-hover:scale-125 transition-transform duration-500" aria-hidden>
+            {icon}
+          </span>
+        </div>
+        <p className="text-gray-900 font-bold text-xl mb-3 group-hover:text-[#1e3a5f] transition-colors duration-300">{value}</p>
+        <p className="text-gray-600 leading-relaxed text-sm">{label}</p>
+      </div>
     </div>
   );
 }
@@ -357,16 +528,38 @@ function DataCard({
   value,
   label,
   sub,
+  index,
 }: {
   value: string;
   label: string;
   sub: string;
+  index: number;
 }) {
+  const { elementRef, isVisible } = useScrollAnimation();
+
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-      <p className="text-[#1e3a5f] font-bold text-2xl">{value}</p>
-      <p className="text-[#1e3a5f] font-medium mt-1">{label}</p>
-      <p className="text-gray-500 text-sm mt-0.5">{sub}</p>
+    <div 
+      ref={elementRef}
+      className={`group relative bg-gradient-to-br from-white via-blue-50/50 to-cyan-50/50 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-blue-100 overflow-hidden hover:-translate-y-2 hover:scale-105 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+      }`}
+      style={{
+        transitionDelay: `${index * 100}ms`,
+      }}
+    >
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a5f]/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      
+      {/* Shimmer effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+      </div>
+      
+      <div className="relative z-10">
+        <p className="text-[#1e3a5f] font-bold text-4xl mb-3 group-hover:scale-110 transition-transform duration-300 inline-block" style={{ textShadow: "0 2px 10px rgba(30, 58, 95, 0.3)" }}>{value}</p>
+        <p className="text-gray-900 font-semibold text-lg mb-2">{label}</p>
+        <p className="text-gray-600 text-sm">{sub}</p>
+      </div>
     </div>
   );
 }
@@ -374,13 +567,14 @@ function DataCard({
 function TabContent({ activeTab }: { activeTab: TabId }) {
   if (activeTab === "services") {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {SERVICE_CARDS.map((card) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {SERVICE_CARDS.map((card, index) => (
           <ServiceCard
             key={card.value}
             icon={card.icon}
             value={card.value}
             label={card.label}
+            index={index}
           />
         ))}
       </div>
@@ -389,13 +583,14 @@ function TabContent({ activeTab }: { activeTab: TabId }) {
 
   if (activeTab === "benefits") {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {BENEFIT_CARDS.map((card) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {BENEFIT_CARDS.map((card, index) => (
           <DataCard
             key={card.label}
             value={card.value}
             label={card.label}
             sub={card.sub}
+            index={index}
           />
         ))}
       </div>
@@ -405,18 +600,19 @@ function TabContent({ activeTab }: { activeTab: TabId }) {
   if (activeTab === "pricing") {
     return (
       <>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {PRICING_CARDS.map((card) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {PRICING_CARDS.map((card, index) => (
             <DataCard
               key={card.label}
               value={card.value}
               label={card.label}
               sub={card.sub}
+              index={index}
             />
           ))}
         </div>
-        <div className="mt-8 text-center">
-          <p className="text-gray-600 text-sm">
+        <div className="mt-10 text-center">
+          <p className="text-gray-600 text-base">
             💡 All packages include mobile-responsive design, SSL security, and free consultation.
             <br />
             Payment plans available for packages over $1,000.
@@ -430,11 +626,31 @@ function TabContent({ activeTab }: { activeTab: TabId }) {
 }
 
 function ProcessSection() {
+  const { elementRef, isVisible } = useScrollAnimation();
+
   return (
-    <section className="bg-gray-50 py-16">
-      <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-[#1e3a5f] text-3xl font-bold text-center mb-12">
-          Our Process
+    <section className="relative py-20 overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50/30 to-cyan-50/30" />
+      
+      {/* Floating orbs */}
+      <div 
+        className="absolute top-10 right-10 w-64 h-64 bg-[#1e3a5f]/10 rounded-full blur-3xl"
+        style={{ animation: "float 15s ease-in-out infinite" }}
+      />
+      <div 
+        className="absolute bottom-10 left-10 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl"
+        style={{ animation: "float 18s ease-in-out infinite 2s" }}
+      />
+      
+      <div 
+        ref={elementRef}
+        className={`relative z-10 max-w-6xl mx-auto px-6 transition-all duration-1000 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+        }`}
+      >
+        <h2 className="text-[#1e3a5f] text-4xl md:text-5xl font-bold text-center mb-16">
+          Our <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">Process</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {[
@@ -458,15 +674,21 @@ function ProcessSection() {
               title: "Launch",
               desc: "Testing, deployment, and ongoing support",
             },
-          ].map((item) => (
-            <div key={item.step} className="text-center">
-              <div className="text-4xl font-bold text-[#1e3a5f]/20 mb-2">
+          ].map((item, index) => (
+            <div 
+              key={item.step} 
+              className="group text-center bg-white/60 backdrop-blur-sm rounded-3xl p-8 hover:bg-white transition-all duration-500 hover:scale-105 hover:shadow-xl border border-white/50"
+              style={{
+                animation: `fadeInUp 0.8s ease-out ${index * 0.2}s backwards`,
+              }}
+            >
+              <div className="text-6xl font-bold bg-gradient-to-br from-[#1e3a5f] to-cyan-600 bg-clip-text text-transparent mb-4 group-hover:scale-110 transition-transform duration-300">
                 {item.step}
               </div>
-              <h3 className="text-[#1e3a5f] font-bold text-lg mb-2">
+              <h3 className="text-[#1e3a5f] font-bold text-xl mb-3">
                 {item.title}
               </h3>
-              <p className="text-gray-600 text-sm">{item.desc}</p>
+              <p className="text-gray-600">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -476,30 +698,72 @@ function ProcessSection() {
 }
 
 function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
+  const { elementRef, isVisible } = useScrollAnimation();
+
   return (
-    <section className="bg-[#e8eef4] py-16">
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        <h2 className="text-[#1e3a5f] text-3xl font-bold">
-          Ready to bring your vision to life?
+    <section 
+      ref={elementRef}
+      className="relative py-32 overflow-hidden"
+    >
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a5f] via-[#2d5a87] to-[#1e3a5f]" style={{ animation: "gradientShift 10s ease infinite" }} />
+      
+      {/* Floating orbs */}
+      <div 
+        className="absolute top-10 right-10 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl"
+        style={{ animation: "float 15s ease-in-out infinite, pulse 4s ease-in-out infinite" }}
+      />
+      <div 
+        className="absolute bottom-10 left-10 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl"
+        style={{ animation: "float 18s ease-in-out infinite 2s, pulse 5s ease-in-out infinite 1s" }}
+      />
+      <div 
+        className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl"
+        style={{ animation: "float 12s ease-in-out infinite 1s" }}
+      />
+      
+      {/* Sparkle effects */}
+      <div className="absolute top-20 left-1/4 w-1 h-1 bg-white rounded-full" style={{ animation: "twinkle 2s ease-in-out infinite" }} />
+      <div className="absolute top-40 right-1/3 w-1 h-1 bg-white rounded-full" style={{ animation: "twinkle 3s ease-in-out infinite 0.5s" }} />
+      <div className="absolute bottom-32 left-1/3 w-1 h-1 bg-white rounded-full" style={{ animation: "twinkle 2.5s ease-in-out infinite 1s" }} />
+      
+      <div 
+        className={`relative z-10 max-w-4xl mx-auto px-6 text-center transition-all duration-1000 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+        }`}
+      >
+        <div 
+          className="inline-block mb-6 px-6 py-3 bg-white/25 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/40 shadow-2xl"
+          style={{ animation: "float 3s ease-in-out infinite" }}
+        >
+          🚀 Let's Build Something Amazing
+        </div>
+        
+        <h2 className="text-white text-5xl md:text-6xl font-bold mb-6 leading-tight">
+          Ready to bring your <span className="bg-gradient-to-r from-cyan-200 to-blue-200 bg-clip-text text-transparent">vision</span> to life?
         </h2>
-        <p className="text-gray-600 mt-4 max-w-2xl mx-auto text-lg">
+        
+        <p className="text-white/95 text-xl md:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed">
           Let's discuss your project and create something amazing together.
-          Free consultation included with every project.
+          <br />
+          <span className="font-bold text-cyan-200">Free consultation</span> included with every project.
         </p>
-        <div className="flex gap-4 justify-center mt-8">
+        
+        <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
           <button
             type="button"
             onClick={onOpenContact}
-            className="bg-[#1e3a5f] text-white px-8 py-3 font-medium rounded-lg hover:bg-[#2d5a87] transition-colors"
+            className="group relative bg-white text-[#1e3a5f] px-10 py-5 font-bold text-lg rounded-full hover:bg-gray-50 transition-all hover:scale-110 shadow-2xl overflow-hidden"
           >
-            Start Your Project
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <span className="relative z-10 group-hover:text-white transition-colors duration-500">Start Your Project ✨</span>
           </button>
           <button
             type="button"
             onClick={onOpenContact}
-            className="border-2 border-[#1e3a5f] text-[#1e3a5f] px-8 py-3 font-medium rounded-lg hover:bg-[#1e3a5f] hover:text-white transition-colors"
+            className="group border-3 border-white text-white px-10 py-5 font-bold text-lg rounded-full hover:bg-white hover:text-[#1e3a5f] transition-all hover:scale-110 shadow-2xl"
           >
-            Schedule a Call
+            📞 Schedule a Call
           </button>
         </div>
       </div>
@@ -543,23 +807,164 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header
-        onOpenContact={() => setIsContactOpen(true)}
-        onGoToServices={scrollToServices}
-      />
-      <Hero onOpenContact={() => setIsContactOpen(true)} />
-      <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="max-w-6xl mx-auto px-6 py-12">
-        <TabContent activeTab={activeTab} />
-      </main>
-      <ProcessSection />
-      <CTASection onOpenContact={() => setIsContactOpen(true)} />
-      <Footer />
-      <ContactModal
-        isOpen={isContactOpen}
-        onClose={() => setIsContactOpen(false)}
-      />
-    </div>
+    <>
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.7;
+          }
+        }
+
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes scrollDown {
+          0% {
+            opacity: 0;
+            transform: translateY(0);
+          }
+          40% {
+            opacity: 1;
+          }
+          80% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+
+        @keyframes gradientShift {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
+        @keyframes twinkle {
+          0%, 100% {
+            opacity: 0;
+            transform: scale(0);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        /* Smooth scrolling */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, #1e3a5f, #2d5a87);
+          border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(to bottom, #2d5a87, #1e3a5f);
+        }
+      `}</style>
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+        <Header
+          onOpenContact={() => setIsContactOpen(true)}
+          onGoToServices={scrollToServices}
+        />
+        <Hero onOpenContact={() => setIsContactOpen(true)} />
+        <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
+        <main className="max-w-6xl mx-auto px-6 py-20">
+          <TabContent activeTab={activeTab} />
+        </main>
+        <ProcessSection />
+        <CTASection onOpenContact={() => setIsContactOpen(true)} />
+        <Footer />
+        <ContactModal
+          isOpen={isContactOpen}
+          onClose={() => setIsContactOpen(false)}
+        />
+      </div>
+    </>
   );
 }
