@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -27,16 +28,37 @@ function ContactModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log("Form submitted:", formData);
-    setIsSubmitted(true);
-    setTimeout(() => {
-      onClose();
-      setIsSubmitted(false);
-      setFormData({ name: "", email: "", message: "" });
-    }, 2000);
+    
+    // EmailJS Configuration - Replace with your actual keys from emailjs.com
+    const SERVICE_ID = "YOUR_SERVICE_ID"; // Get from emailjs.com dashboard
+    const TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // Get from emailjs.com dashboard
+    const PUBLIC_KEY = "YOUR_PUBLIC_KEY"; // Get from emailjs.com dashboard
+    
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+          to_email: "customsites21@gmail.com",
+        },
+        PUBLIC_KEY
+      );
+      
+      setIsSubmitted(true);
+      setTimeout(() => {
+        onClose();
+        setIsSubmitted(false);
+        setFormData({ name: "", email: "", message: "" });
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      alert("Failed to send message. Please try again or email us directly at customsites21@gmail.com");
+    }
   };
 
   return (
