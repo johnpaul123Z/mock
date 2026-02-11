@@ -293,19 +293,24 @@ const BENEFIT_CARDS = [
 
 const PRICING_CARDS = [
   {
-    value: "From $2,500",
-    label: "Landing Page",
-    sub: "Perfect for launching your idea",
+    value: "$500 - $800",
+    label: "Starter Website",
+    sub: "1-3 pages • Mobile responsive • Contact form",
   },
   {
-    value: "From $5,000",
-    label: "Business Website",
-    sub: "Multi-page with CMS and forms",
+    value: "$1,000 - $1,800",
+    label: "Standard Business",
+    sub: "4-7 pages • Custom design • SEO • Booking",
   },
   {
-    value: "From $10,000",
-    label: "E-Commerce",
-    sub: "Full online store with payments",
+    value: "$2,500 - $4,000",
+    label: "Premium Package",
+    sub: "8-12 pages • Advanced features • CRM",
+  },
+  {
+    value: "$75 - $150/mo",
+    label: "Maintenance Plan",
+    sub: "Hosting • Updates • Security • Edits",
   },
 ];
 
@@ -360,16 +365,25 @@ function TabContent({ activeTab }: { activeTab: TabId }) {
 
   if (activeTab === "pricing") {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {PRICING_CARDS.map((card) => (
-          <DataCard
-            key={card.label}
-            value={card.value}
-            label={card.label}
-            sub={card.sub}
-          />
-        ))}
-      </div>
+      <>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {PRICING_CARDS.map((card) => (
+            <DataCard
+              key={card.label}
+              value={card.value}
+              label={card.label}
+              sub={card.sub}
+            />
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <p className="text-gray-600 text-sm">
+            💡 All packages include mobile-responsive design, SSL security, and free consultation.
+            <br />
+            Payment plans available for packages over $1,000.
+          </p>
+        </div>
+      </>
     );
   }
 
