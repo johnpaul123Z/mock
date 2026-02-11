@@ -66,6 +66,9 @@ function ContactModal({
     const PUBLIC_KEY = "W5lBzugOAajMD00Ga";
     
     try {
+      // Initialize EmailJS
+      emailjs.init(PUBLIC_KEY);
+      
       await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
@@ -73,9 +76,7 @@ function ContactModal({
           from_name: formData.name,
           from_email: formData.email,
           message: formData.message,
-          to_email: "customsites21@gmail.com",
-        },
-        PUBLIC_KEY
+        }
       );
       
       setIsSubmitted(true);
@@ -749,23 +750,14 @@ function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
           <span className="font-bold text-cyan-200">Free consultation</span> included with every project.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-          <button
-            type="button"
-            onClick={onOpenContact}
-            className="group relative bg-white text-[#1e3a5f] px-10 py-5 font-bold text-lg rounded-full hover:bg-gray-50 transition-all hover:scale-110 shadow-2xl overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <span className="relative z-10 group-hover:text-white transition-colors duration-500">Start Your Project ✨</span>
-          </button>
-          <button
-            type="button"
-            onClick={onOpenContact}
-            className="group border-3 border-white text-white px-10 py-5 font-bold text-lg rounded-full hover:bg-white hover:text-[#1e3a5f] transition-all hover:scale-110 shadow-2xl"
-          >
-            📞 Schedule a Call
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onOpenContact}
+          className="group relative bg-white text-[#1e3a5f] px-12 py-6 font-bold text-xl rounded-full hover:bg-gray-50 transition-all hover:scale-110 shadow-2xl overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <span className="relative z-10 group-hover:text-white transition-colors duration-500">Start Your Project ✨</span>
+        </button>
       </div>
     </section>
   );
