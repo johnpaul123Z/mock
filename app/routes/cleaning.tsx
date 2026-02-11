@@ -39,17 +39,19 @@ function Header() {
 
 function Hero() {
   return (
-    <section className="relative w-full min-h-[500px] bg-gradient-to-br from-[#0ea5e9] via-[#0284c7] to-[#0369a1] overflow-hidden">
+    <section className="relative w-full min-h-[500px] overflow-hidden">
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-20"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage:
             "url(https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1600&q=80)",
         }}
       />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/30 to-black/40" />
       {/* Decorative circles */}
-      <div className="absolute top-20 right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-20 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+      <div className="absolute top-20 right-20 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-20 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
       
       <div className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-20 text-center">
         <div className="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
