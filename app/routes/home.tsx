@@ -93,32 +93,37 @@ function ContactModal({
 
   return (
     <div 
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
       style={{ animation: "fadeIn 0.3s ease-out" }}
+      onClick={onClose}
     >
       <div 
-        className="bg-white rounded-3xl max-w-md w-full p-8 relative shadow-2xl"
+        className="bg-white rounded-3xl max-w-md w-full p-10 relative shadow-2xl border border-gray-100"
         style={{ animation: "scaleIn 0.4s ease-out" }}
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all"
+          type="button"
         >
           ✕
         </button>
         
         {!isSubmitted ? (
           <>
-            <h2 className="text-[#1e3a5f] text-2xl font-bold mb-2">
-              Start Your Project
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Tell us about your project and we'll get back to you within 24 hours.
-            </p>
+            <div className="mb-8">
+              <h2 className="text-[#1e3a5f] text-3xl font-bold mb-3 tracking-tight">
+                Start Your Project
+              </h2>
+              <p className="text-gray-600 text-base leading-relaxed">
+                Tell us about your project and we'll get back to you within 24 hours.
+              </p>
+            </div>
             
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Name
                 </label>
                 <input
@@ -128,12 +133,13 @@ function ContactModal({
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
+                  className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent transition-all outline-none text-gray-900 placeholder-gray-400"
+                  placeholder="John Smith"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Email
                 </label>
                 <input
@@ -143,41 +149,44 @@ function ContactModal({
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
+                  className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent transition-all outline-none text-gray-900 placeholder-gray-400"
+                  placeholder="john@company.com"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Project Details
                 </label>
                 <textarea
                   required
-                  rows={4}
+                  rows={5}
                   value={formData.message}
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
+                  className="w-full px-5 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent transition-all outline-none resize-none text-gray-900 placeholder-gray-400"
                   placeholder="Tell us about your project goals, timeline, and budget..."
                 />
               </div>
               
               <button
                 type="submit"
-                className="w-full bg-[#1e3a5f] text-white py-3 rounded-lg font-medium hover:bg-[#2d5a87] transition-colors"
+                className="w-full bg-gradient-to-r from-[#1e3a5f] to-[#2d5a87] text-white py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-[1.02] transition-all"
               >
-                Send Message
+                Send Message →
               </button>
             </form>
           </>
         ) : (
-          <div className="text-center py-8">
-            <div className="text-4xl mb-4">✓</div>
-            <h3 className="text-[#1e3a5f] text-xl font-bold mb-2">
+          <div className="text-center py-12">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="text-5xl text-green-600">✓</div>
+            </div>
+            <h3 className="text-[#1e3a5f] text-2xl font-bold mb-3">
               Message Sent!
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-lg">
               We'll get back to you within 24 hours.
             </p>
           </div>
@@ -306,50 +315,78 @@ function Hero({ onOpenContact }: { onOpenContact: () => void }) {
         style={{ animation: "float 12s ease-in-out infinite 2s, pulse 4s ease-in-out infinite 1s" }}
       />
       
-      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-40 pb-32">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-44 pb-36">
         <div 
-          className="inline-block mb-6 px-6 py-3 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-medium border border-white/30 shadow-xl"
+          className="inline-flex items-center gap-2 mb-8 px-5 py-2.5 bg-white/15 backdrop-blur-md rounded-full text-white text-sm font-semibold border border-white/20 shadow-2xl"
           style={{ animation: "fadeInUp 1s ease-out, float 3s ease-in-out infinite 0.5s" }}
         >
-          ✨ Premium Custom Websites
+          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+          Premium Custom Websites
         </div>
         
         <h1 
-          className="text-white text-6xl md:text-7xl font-bold max-w-3xl leading-tight mb-8"
+          className="text-white text-7xl md:text-8xl font-black max-w-5xl leading-[1.1] mb-8 tracking-tight"
           style={{ animation: "fadeInUp 1s ease-out 0.2s backwards" }}
         >
-          Your Vision,
+          Transform Your
           <br />
-          <span className="bg-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 bg-clip-text text-transparent" style={{ animation: "shimmer 3s ease-in-out infinite" }}>
-            Our Craft
+          <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 bg-clip-text text-transparent" style={{ animation: "shimmer 3s ease-in-out infinite", WebkitBackgroundClip: "text" }}>
+            Digital Presence
           </span>
         </h1>
         
         <p 
-          className="text-white/95 text-xl md:text-2xl max-w-2xl leading-relaxed mb-10"
+          className="text-white/90 text-2xl md:text-3xl max-w-3xl leading-relaxed mb-12 font-light"
           style={{ animation: "fadeInUp 1s ease-out 0.4s backwards" }}
         >
-          Custom websites designed to captivate your audience and grow your business.
+          We craft stunning, high-performance websites that captivate audiences and drive measurable business growth.
         </p>
         
         <div 
-          className="flex flex-col sm:flex-row gap-5"
+          className="flex flex-col sm:flex-row gap-5 items-center sm:items-start"
           style={{ animation: "fadeInUp 1s ease-out 0.6s backwards" }}
         >
           <button
             type="button"
             onClick={onOpenContact}
-            className="group relative bg-white text-[#1e3a5f] px-10 py-5 rounded-full font-bold text-lg hover:bg-gray-50 transition-all hover:scale-110 shadow-2xl overflow-hidden"
+            className="group relative bg-white text-[#1e3a5f] px-12 py-5 rounded-2xl font-bold text-lg hover:shadow-2xl transition-all hover:scale-105 shadow-xl overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <span className="relative z-10 group-hover:text-white transition-colors duration-500">Start Your Project ✨</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <span className="relative z-10 group-hover:text-white transition-colors duration-500 flex items-center gap-2">
+              Start Your Project
+              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </span>
           </button>
           <a
             href="/portfolio"
-            className="group border-3 border-white text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white hover:text-[#1e3a5f] transition-all hover:scale-110 shadow-2xl inline-block text-center"
+            className="group border-2 border-white/80 text-white px-12 py-5 rounded-2xl font-bold text-lg hover:bg-white hover:border-white hover:text-[#1e3a5f] transition-all hover:scale-105 shadow-xl inline-flex items-center gap-2 backdrop-blur-sm"
           >
-            View Portfolio 🚀
+            View Portfolio
+            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
           </a>
+        </div>
+        
+        {/* Stats Bar */}
+        <div 
+          className="mt-20 grid grid-cols-3 gap-8 max-w-2xl"
+          style={{ animation: "fadeInUp 1s ease-out 0.8s backwards" }}
+        >
+          <div className="text-center">
+            <div className="text-white text-4xl font-bold mb-1">150+</div>
+            <div className="text-white/70 text-sm font-medium">Projects Launched</div>
+          </div>
+          <div className="text-center border-l border-r border-white/20">
+            <div className="text-white text-4xl font-bold mb-1">5.0</div>
+            <div className="text-white/70 text-sm font-medium">Client Rating</div>
+          </div>
+          <div className="text-center">
+            <div className="text-white text-4xl font-bold mb-1">100%</div>
+            <div className="text-white/70 text-sm font-medium">Satisfaction</div>
+          </div>
         </div>
         
         {/* Scroll Indicator */}
@@ -473,13 +510,13 @@ function ServiceCard({
       </div>
       
       <div className="relative z-10">
-        <div className="w-20 h-20 bg-gradient-to-br from-[#1e3a5f] via-[#2d5a87] to-[#1e3a5f] rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-          <span className="text-4xl group-hover:scale-125 transition-transform duration-500" aria-hidden>
+        <div className="w-16 h-16 bg-gradient-to-br from-[#1e3a5f] via-[#2d5a87] to-[#1e3a5f] rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+          <span className="text-3xl group-hover:scale-125 transition-transform duration-500" aria-hidden>
             {icon}
           </span>
         </div>
-        <p className="text-gray-900 font-bold text-xl mb-3 group-hover:text-[#1e3a5f] transition-colors duration-300">{value}</p>
-        <p className="text-gray-600 leading-relaxed text-sm">{label}</p>
+        <h3 className="text-gray-900 font-bold text-xl mb-2.5 group-hover:text-[#1e3a5f] transition-colors duration-300 tracking-tight">{value}</h3>
+        <p className="text-gray-600 leading-relaxed text-sm font-medium">{label}</p>
       </div>
     </div>
   );
@@ -646,50 +683,65 @@ function ProcessSection() {
       
       <div 
         ref={elementRef}
-        className={`relative z-10 max-w-6xl mx-auto px-6 transition-all duration-1000 ${
+        className={`relative z-10 max-w-7xl mx-auto px-6 transition-all duration-1000 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
         }`}
       >
-        <h2 className="text-[#1e3a5f] text-4xl md:text-5xl font-bold text-center mb-16">
-          Our <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">Process</span>
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="text-center mb-20">
+          <div className="inline-block px-4 py-2 bg-[#1e3a5f]/10 rounded-full text-[#1e3a5f] text-sm font-semibold mb-4">
+            How We Work
+          </div>
+          <h2 className="text-[#1e3a5f] text-5xl md:text-6xl font-black text-center mb-5 tracking-tight">
+            Our <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">Process</span>
+          </h2>
+          <p className="text-gray-600 text-xl max-w-2xl mx-auto">
+            A proven methodology that delivers exceptional results every time
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
               step: "01",
               title: "Discovery",
-              desc: "We learn about your goals, audience, and vision",
+              desc: "Deep dive into your goals, audience, and vision to craft the perfect strategy",
             },
             {
               step: "02",
               title: "Design",
-              desc: "Custom mockups tailored to your brand",
+              desc: "Pixel-perfect mockups and prototypes tailored to your brand identity",
             },
             {
               step: "03",
               title: "Development",
-              desc: "Clean code built with modern technologies",
+              desc: "Clean, scalable code built with cutting-edge technologies",
             },
             {
               step: "04",
               title: "Launch",
-              desc: "Testing, deployment, and ongoing support",
+              desc: "Rigorous testing, seamless deployment, and continuous optimization",
             },
           ].map((item, index) => (
             <div 
               key={item.step} 
-              className="group text-center bg-white/60 backdrop-blur-sm rounded-3xl p-8 hover:bg-white transition-all duration-500 hover:scale-105 hover:shadow-xl border border-white/50"
+              className="group relative bg-white rounded-3xl p-8 hover:bg-gradient-to-br hover:from-white hover:to-blue-50/30 transition-all duration-500 hover:scale-[1.02] shadow-lg hover:shadow-2xl border border-gray-200/50"
               style={{
-                animation: `fadeInUp 0.8s ease-out ${index * 0.2}s backwards`,
+                animation: `fadeInUp 0.8s ease-out ${index * 0.15}s backwards`,
               }}
             >
-              <div className="text-6xl font-bold bg-gradient-to-br from-[#1e3a5f] to-cyan-600 bg-clip-text text-transparent mb-4 group-hover:scale-110 transition-transform duration-300">
-                {item.step}
+              <div className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-[#1e3a5f] to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                <span className="text-white text-sm font-bold">{item.step}</span>
               </div>
-              <h3 className="text-[#1e3a5f] font-bold text-xl mb-3">
+              
+              <h3 className="text-[#1e3a5f] font-bold text-2xl mb-4 tracking-tight">
                 {item.title}
               </h3>
-              <p className="text-gray-600">{item.desc}</p>
+              <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+              
+              {/* Progress connector line (except last item) */}
+              {index < 3 && (
+                <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-gray-300 to-transparent" />
+              )}
             </div>
           ))}
         </div>
@@ -729,35 +781,65 @@ function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
       <div className="absolute bottom-32 left-1/3 w-1 h-1 bg-white rounded-full" style={{ animation: "twinkle 2.5s ease-in-out infinite 1s" }} />
       
       <div 
-        className={`relative z-10 max-w-4xl mx-auto px-6 text-center transition-all duration-1000 ${
+        className={`relative z-10 max-w-5xl mx-auto px-6 text-center transition-all duration-1000 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
         }`}
       >
         <div 
-          className="inline-block mb-6 px-6 py-3 bg-white/25 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/40 shadow-2xl"
+          className="inline-flex items-center gap-2 mb-8 px-5 py-2.5 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-semibold border border-white/30 shadow-2xl"
           style={{ animation: "float 3s ease-in-out infinite" }}
         >
-          🚀 Let's Build Something Amazing
+          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+          Let's Build Something Amazing
         </div>
         
-        <h2 className="text-white text-5xl md:text-6xl font-bold mb-6 leading-tight">
-          Ready to bring your <span className="bg-gradient-to-r from-cyan-200 to-blue-200 bg-clip-text text-transparent">vision</span> to life?
+        <h2 className="text-white text-6xl md:text-7xl font-black mb-8 leading-[1.1] tracking-tight">
+          Ready to Transform
+          <br />
+          Your <span className="bg-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 bg-clip-text text-transparent">Digital Presence</span>?
         </h2>
         
-        <p className="text-white/95 text-xl md:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed">
-          Let's discuss your project and create something amazing together.
+        <p className="text-white/90 text-2xl md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+          Let's discuss your project and create something extraordinary together.
           <br />
-          <span className="font-bold text-cyan-200">Free consultation</span> included with every project.
+          <span className="font-semibold text-cyan-200">Free consultation</span> and project roadmap included.
         </p>
         
         <button
           type="button"
           onClick={onOpenContact}
-          className="group relative bg-white text-[#1e3a5f] px-12 py-6 font-bold text-xl rounded-full hover:bg-gray-50 transition-all hover:scale-110 shadow-2xl overflow-hidden"
+          className="group relative bg-white text-[#1e3a5f] px-14 py-6 font-bold text-xl rounded-2xl hover:shadow-2xl transition-all hover:scale-105 shadow-xl overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <span className="relative z-10 group-hover:text-white transition-colors duration-500">Start Your Project ✨</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <span className="relative z-10 group-hover:text-white transition-colors duration-500 inline-flex items-center gap-3">
+            Start Your Project
+            <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </span>
         </button>
+        
+        {/* Trust indicators */}
+        <div className="mt-16 flex items-center justify-center gap-12 text-white/80 text-sm font-medium">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span>5.0 Rating</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span>100% Satisfaction</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span>Fully Insured</span>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -765,21 +847,75 @@ function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
 
 function Footer() {
   return (
-    <footer className="bg-[#1e3a5f] text-white py-8">
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        <p className="text-white/80 text-sm">
-          © 2026 CustomSites. All rights reserved.
-        </p>
-        <div className="flex gap-6 justify-center mt-4 text-sm text-white/70">
-          <a href="#privacy" className="hover:text-white transition-colors">
-            Privacy Policy
-          </a>
-          <a href="#terms" className="hover:text-white transition-colors">
-            Terms of Service
-          </a>
-          <a href="#contact" className="hover:text-white transition-colors">
-            Contact
-          </a>
+    <footer className="relative bg-gradient-to-br from-[#0f1f3a] via-[#1e3a5f] to-[#0f1f3a] text-white py-16">
+      {/* Subtle top border gradient */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+      
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+          {/* Brand */}
+          <div className="md:col-span-2">
+            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
+              ✨ CustomSites
+            </h3>
+            <p className="text-white/70 leading-relaxed mb-4 max-w-md">
+              Crafting premium custom websites that elevate brands and drive results. Your vision, our expertise.
+            </p>
+            <div className="flex gap-3">
+              {['twitter', 'linkedin', 'github'].map((social) => (
+                <a
+                  key={social}
+                  href={`#${social}`}
+                  className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-all hover:scale-110"
+                >
+                  <span className="sr-only">{social}</span>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </a>
+              ))}
+            </div>
+          </div>
+          
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-bold mb-4 text-white">Quick Links</h4>
+            <ul className="space-y-2 text-white/70 text-sm">
+              {['About Us', 'Services', 'Portfolio', 'Contact'].map((link) => (
+                <li key={link}>
+                  <a href={`#${link.toLowerCase().replace(' ', '-')}`} className="hover:text-white transition-colors">
+                    {link}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          {/* Contact */}
+          <div>
+            <h4 className="font-bold mb-4 text-white">Get In Touch</h4>
+            <ul className="space-y-2 text-white/70 text-sm">
+              <li>customsites21@gmail.com</li>
+              <li>Free consultation</li>
+              <li>24-hour response time</li>
+            </ul>
+          </div>
+        </div>
+        
+        {/* Bottom bar */}
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/60">
+          <p>© 2026 CustomSites. All rights reserved.</p>
+          <div className="flex gap-6">
+            <a href="#privacy" className="hover:text-white transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#terms" className="hover:text-white transition-colors">
+              Terms of Service
+            </a>
+            <a href="#contact" className="hover:text-white transition-colors">
+              Contact
+            </a>
+          </div>
         </div>
       </div>
     </footer>
