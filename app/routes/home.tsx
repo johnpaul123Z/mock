@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "PixelCraft Studios | Custom Website Design & Development" },
+    { title: "CustomSites | Custom Website Design & Development" },
     {
       name: "description",
       content: "Premium custom websites that elevate your brand and drive results.",
@@ -148,7 +148,7 @@ function Header({
     <header className="w-full bg-[#1e3a5f] py-4 px-6">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <span className="text-white font-semibold text-xl tracking-tight">
-          PixelCraft Studios
+          CustomSites
         </span>
         <nav className="hidden md:flex gap-6 text-sm text-white/90">
           <button
@@ -490,7 +490,7 @@ function Footer() {
     <footer className="bg-[#1e3a5f] text-white py-8">
       <div className="max-w-6xl mx-auto px-6 text-center">
         <p className="text-white/80 text-sm">
-          © 2026 PixelCraft Studios. All rights reserved.
+          © 2026 CustomSites. All rights reserved.
         </p>
         <div className="flex gap-6 justify-center mt-4 text-sm text-white/70">
           <a href="#privacy" className="hover:text-white transition-colors">

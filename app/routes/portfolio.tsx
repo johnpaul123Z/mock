@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 export function meta() {
   return [
-    { title: "Portfolio | PixelCraft Studios" },
+    { title: "Portfolio | CustomSites" },
     {
       name: "description",
       content: "Explore our portfolio of custom website designs and demos.",
@@ -54,7 +54,7 @@ function Header() {
     <header className="w-full bg-[#1e3a5f] py-4 px-6">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <Link to="/" className="text-white font-semibold text-xl tracking-tight">
-          PixelCraft Studios
+          CustomSites
         </Link>
         <Link
           to="/"
@@ -178,7 +178,7 @@ export default function Portfolio() {
       <footer className="bg-[#1e3a5f] text-white py-8 mt-16">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <p className="text-white/80 text-sm">
-            © 2026 PixelCraft Studios. All rights reserved.
+            © 2026 CustomSites. All rights reserved.
           </p>
         </div>
       </footer>
