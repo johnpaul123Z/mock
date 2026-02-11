@@ -31,10 +31,10 @@ function ContactModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // EmailJS Configuration - Replace with your actual keys from emailjs.com
-    const SERVICE_ID = "YOUR_SERVICE_ID"; // Get from emailjs.com dashboard
-    const TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // Get from emailjs.com dashboard
-    const PUBLIC_KEY = "YOUR_PUBLIC_KEY"; // Get from emailjs.com dashboard
+    // EmailJS Configuration
+    const SERVICE_ID = "service_xwl6rpk";
+    const TEMPLATE_ID = "template_di0byaq";
+    const PUBLIC_KEY = "W5lBzugOAajMD00Ga";
     
     try {
       await emailjs.send(
