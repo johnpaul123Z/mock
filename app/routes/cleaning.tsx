@@ -21,7 +21,7 @@ type TabId = (typeof TABS)[number]["id"];
 
 function Header() {
   return (
-    <header className="w-full bg-[#1e3a5f] py-4 px-6">
+    <header className="w-full bg-[#0ea5e9] py-4 px-6">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <Link to="/" className="text-white font-semibold text-xl tracking-tight">
           SparkClean
@@ -39,22 +39,34 @@ function Header() {
 
 function Hero() {
   return (
-    <section className="relative w-full min-h-[420px] bg-[#2d5a87] overflow-hidden">
+    <section className="relative w-full min-h-[500px] bg-gradient-to-br from-[#0ea5e9] via-[#0284c7] to-[#0369a1] overflow-hidden">
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-40"
+        className="absolute inset-0 bg-cover bg-center opacity-20"
         style={{
           backgroundImage:
             "url(https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1600&q=80)",
         }}
       />
-      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-16">
-        <h1 className="text-white text-4xl md:text-5xl font-bold max-w-xl leading-tight">
-          A Fresh Start, Every Time
+      {/* Decorative circles */}
+      <div className="absolute top-20 right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-20 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+      
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-20 text-center">
+        <div className="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
+          ✨ Professional Cleaning Services
+        </div>
+        <h1 className="text-white text-5xl md:text-6xl font-bold max-w-3xl mx-auto leading-tight mb-6">
+          A Fresh Start,
+          <br />
+          <span className="text-sky-100">Every Time</span>
         </h1>
-        <p className="text-white/95 text-lg md:text-xl max-w-xl mt-4 leading-relaxed">
-          Professional cleaning that leaves your space spotless and refreshed.
-          Trusted by homes and offices for reliability and attention to detail.
+        <p className="text-white/90 text-xl max-w-2xl mx-auto leading-relaxed">
+          Experience spotless spaces and exceptional service. We bring cleanliness,
+          comfort, and peace of mind to your home or office.
         </p>
+        <button className="mt-8 bg-white text-[#0ea5e9] px-8 py-4 rounded-full font-semibold text-lg hover:bg-sky-50 transition-all hover:scale-105 shadow-xl">
+          Get Your Free Quote
+        </button>
       </div>
     </section>
   );
@@ -68,8 +80,8 @@ function TabNav({
   onTabChange: (id: TabId) => void;
 }) {
   return (
-    <nav className="max-w-6xl mx-auto px-6 -mt-1">
-      <div className="flex gap-0">
+    <nav className="relative z-20 max-w-5xl mx-auto px-6 -mt-8">
+      <div className="bg-white rounded-2xl shadow-xl p-2 flex gap-2">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -77,8 +89,8 @@ function TabNav({
             onClick={() => onTabChange(tab.id)}
             className={
               activeTab === tab.id
-                ? "px-8 py-4 text-sm font-medium transition-colors bg-[#1e3a5f] text-white"
-                : "px-8 py-4 text-sm font-medium transition-colors bg-[#e8eef4] text-[#1e3a5f] hover:bg-[#dce4ec]"
+                ? "flex-1 px-6 py-4 text-sm font-semibold transition-all bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] text-white rounded-xl shadow-md"
+                : "flex-1 px-6 py-4 text-sm font-semibold transition-all text-gray-600 hover:text-[#0ea5e9] hover:bg-gray-50 rounded-xl"
             }
           >
             {tab.label}
@@ -108,12 +120,14 @@ function ServiceCard({
   label: string;
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-      <span className="text-2xl" aria-hidden>
-        {icon}
-      </span>
-      <p className="text-[#1e3a5f] font-bold text-xl mt-3">{value}</p>
-      <p className="text-gray-600 text-sm mt-1">{label}</p>
+    <div className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-gray-100">
+      <div className="w-16 h-16 bg-gradient-to-br from-[#0ea5e9] to-[#0284c7] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <span className="text-3xl" aria-hidden>
+          {icon}
+        </span>
+      </div>
+      <p className="text-gray-900 font-bold text-xl mb-2">{value}</p>
+      <p className="text-gray-600 leading-relaxed">{label}</p>
     </div>
   );
 }
@@ -143,10 +157,10 @@ function DataCard({
   sub: string;
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-      <p className="text-[#1e3a5f] font-bold text-2xl">{value}</p>
-      <p className="text-[#1e3a5f] font-medium mt-1">{label}</p>
-      <p className="text-gray-500 text-sm mt-0.5">{sub}</p>
+    <div className="bg-gradient-to-br from-white to-sky-50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all border border-sky-100">
+      <p className="text-[#0ea5e9] font-bold text-3xl mb-2">{value}</p>
+      <p className="text-gray-900 font-semibold text-lg mb-1">{label}</p>
+      <p className="text-gray-600 text-sm">{sub}</p>
     </div>
   );
 }
@@ -202,21 +216,36 @@ function TabContent({ activeTab }: { activeTab: TabId }) {
 
 function CTASection() {
   return (
-    <section className="bg-[#e8eef4] py-12">
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        <h2 className="text-[#1e3a5f] text-2xl font-bold">
+    <section className="relative py-20 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0ea5e9] via-[#0284c7] to-[#0369a1]" />
+      <div className="absolute top-10 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
+      
+      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+        <div className="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
+          🎉 Limited Time Offer
+        </div>
+        <h2 className="text-white text-4xl md:text-5xl font-bold mb-4">
           Ready for a spotless space?
         </h2>
-        <p className="text-gray-600 mt-2 max-w-md mx-auto">
-          Book your first clean today. No commitment required for one-time
-          services.
+        <p className="text-white/90 text-xl mb-8 max-w-2xl mx-auto">
+          Book your first clean today and get 15% off! No commitment required
+          for one-time services.
         </p>
-        <button
-          type="button"
-          className="mt-6 bg-[#1e3a5f] text-white px-8 py-3 font-medium rounded-lg hover:bg-[#2d5a87] transition-colors"
-        >
-          Get a quote
-        </button>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            type="button"
+            className="bg-white text-[#0ea5e9] px-8 py-4 font-semibold rounded-full hover:bg-sky-50 transition-all hover:scale-105 shadow-xl"
+          >
+            Get Your Free Quote
+          </button>
+          <button
+            type="button"
+            className="border-2 border-white text-white px-8 py-4 font-semibold rounded-full hover:bg-white/10 transition-all"
+          >
+            Call Us Now
+          </button>
+        </div>
       </div>
     </section>
   );
@@ -226,11 +255,11 @@ export default function Cleaning() {
   const [activeTab, setActiveTab] = useState<TabId>("services");
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Header />
       <Hero />
       <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="max-w-6xl mx-auto px-6 py-10">
+      <main className="max-w-6xl mx-auto px-6 py-16">
         <TabContent activeTab={activeTab} />
       </main>
       <CTASection />
