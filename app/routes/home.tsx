@@ -137,7 +137,13 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
-function Header() {
+function Header({
+  onOpenContact,
+  onGoToServices,
+}: {
+  onOpenContact: () => void;
+  onGoToServices: () => void;
+}) {
   return (
     <header className="w-full bg-[#1e3a5f] py-4 px-6">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
@@ -145,10 +151,21 @@ function Header() {
           PixelCraft Studios
         </span>
         <nav className="hidden md:flex gap-6 text-sm text-white/90">
-          <a href="#services" className="hover:text-white transition-colors">Services</a>
-          <a href="#about" className="hover:text-white transition-colors">About</a>
-          <a href="/cleaning" className="hover:text-white transition-colors">Demo</a>
-          <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+          <button
+            onClick={onGoToServices}
+            className="hover:text-white transition-colors"
+          >
+            Services
+          </button>
+          <a href="/portfolio" className="hover:text-white transition-colors">
+            Portfolio
+          </a>
+          <button
+            onClick={onOpenContact}
+            className="hover:text-white transition-colors"
+          >
+            Contact
+          </button>
         </nav>
       </div>
     </header>
@@ -495,9 +512,20 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<TabId>("services");
   const [isContactOpen, setIsContactOpen] = useState(false);
 
+  const scrollToServices = () => {
+    const servicesSection = document.querySelector("main");
+    if (servicesSection) {
+      servicesSection.scrollIntoView({ behavior: "smooth" });
+    }
+    setActiveTab("services");
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <Header
+        onOpenContact={() => setIsContactOpen(true)}
+        onGoToServices={scrollToServices}
+      />
       <Hero onOpenContact={() => setIsContactOpen(true)} />
       <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
       <main className="max-w-6xl mx-auto px-6 py-12">
