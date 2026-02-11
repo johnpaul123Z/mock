@@ -180,12 +180,12 @@ function Hero({ onOpenContact }: { onOpenContact: () => void }) {
           >
             Start Your Project
           </button>
-          <button
-            type="button"
-            className="border-2 border-white text-white px-8 py-3 font-semibold rounded-lg hover:bg-white/10 transition-colors"
+          <a
+            href="/portfolio"
+            className="border-2 border-white text-white px-8 py-3 font-semibold rounded-lg hover:bg-white/10 transition-colors inline-block text-center"
           >
             View Portfolio
-          </button>
+          </a>
         </div>
       </div>
     </section>
