@@ -54,31 +54,32 @@ function ContactModal({
     message: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Initialize EmailJS once when component mounts
+  useEffect(() => {
+    emailjs.init("W5lBzugOAajMD00Ga");
+  }, []);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // EmailJS Configuration
-    const SERVICE_ID = "service_xwl6rpk";
-    const TEMPLATE_ID = "template_di0byaq";
-    const PUBLIC_KEY = "W5lBzugOAajMD00Ga";
+    setIsLoading(true);
     
     try {
-      // Initialize EmailJS
-      emailjs.init(PUBLIC_KEY);
-      
-      await emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_ID,
+      const result = await emailjs.send(
+        "service_xwl6rpk",  // Service ID
+        "template_di0byaq",  // Template ID
         {
           from_name: formData.name,
           from_email: formData.email,
           message: formData.message,
+          to_email: "customsites21@gmail.com",
         }
       );
       
+      console.log("Email sent successfully:", result);
       setIsSubmitted(true);
       setTimeout(() => {
         onClose();
@@ -88,6 +89,8 @@ function ContactModal({
     } catch (error) {
       console.error("Failed to send email:", error);
       alert("Failed to send message. Please try again or email us directly at customsites21@gmail.com");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -172,9 +175,20 @@ function ContactModal({
               
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#1e3a5f] to-[#2d5a87] text-white py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-[1.02] transition-all"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-[#1e3a5f] to-[#2d5a87] text-white py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
-                Send Message →
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Sending...
+                  </span>
+                ) : (
+                  "Send Message →"
+                )}
               </button>
             </form>
           </>
